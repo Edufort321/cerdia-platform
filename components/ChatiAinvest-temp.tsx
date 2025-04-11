@@ -81,3 +81,4 @@ export default function ChatiAinvest({ mode = 'investor' }: Props) {
     </div>
   )
 }
+Rename to fix casing - temp step
