@@ -81,4 +81,4 @@ export default function ChatiAinvest({ mode = 'investor' }: Props) {
     </div>
   )
 }
-Rename to fix casing - temp step
+Final rename to ChatiAinvest.tsx (correct casing)
