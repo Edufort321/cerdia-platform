@@ -6,7 +6,7 @@ interface Props {
   mode?: 'investor' | 'admin' | 'formation'
 }
 
-export default function CerdiaIAChat({ mode = 'investor' }: Props) {
+export default function ChatiAinvest({ mode = 'investor' }: Props) {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -20,31 +20,43 @@ export default function CerdiaIAChat({ mode = 'investor' }: Props) {
     setInput('')
     setLoading(true)
 
-    const res = await fetch('/api/cerdia', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: generatePrompt(newMessages, mode),
-      }),
-    })
+    try {
+      const res = await fetch('/api/cerdia', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: generatePrompt(newMessages, mode),
+        }),
+      })
 
-    const data = await res.json()
-    setMessages([...newMessages, { role: 'assistant', content: data.reply }])
-    setLoading(false)
+      if (!res.ok) throw new Error('Erreur de communication avec l’IA CERDIA.')
+
+      const data = await res.json()
+      setMessages([...newMessages, { role: 'assistant', content: data.reply }])
+    } catch (err) {
+      setMessages([
+        ...newMessages,
+        { role: 'assistant', content: '❌ Une erreur est survenue. Veuillez réessayer plus tard.' },
+      ])
+    } finally {
+      setLoading(false)
+    }
   }
 
   const generatePrompt = (
     messages: { role: string; content: string }[],
     mode: 'investor' | 'admin' | 'formation'
-  ) => {
+  ): string => {
     const intro =
       mode === 'investor'
-        ? 'Tu es l’assistant intelligent de Investissement CERDIA. Réponds aux questions d’un investisseur de manière claire, stratégique et professionnelle.'
+        ? "Tu es l’assistant intelligent de Investissement CERDIA. Réponds aux questions d’un investisseur de manière claire, stratégique et professionnelle."
         : mode === 'admin'
         ? 'Tu es l’assistant présidentiel de CERDIA. Tu peux générer des pages, contrats, modules ou décisions stratégiques.'
         : 'Tu es un coach IA pour la formation CERDIA. Tu expliques les concepts comme à un étudiant motivé.'
 
-    const historique = messages.map((m) => `${m.role === 'user' ? 'Utilisateur' : 'IA'} : ${m.content}`).join('\n')
+    const historique = messages
+      .map((m) => `${m.role === 'user' ? 'Utilisateur' : 'IA'} : ${m.content}`)
+      .join('\n')
 
     return `${intro}\n\n${historique}\n\nRéponds maintenant à la dernière question :`
   }
@@ -56,7 +68,11 @@ export default function CerdiaIAChat({ mode = 'investor' }: Props) {
       <div className="border p-4 mb-4 h-64 overflow-y-auto rounded bg-gray-50">
         {messages.map((msg, i) => (
           <div key={i} className={`mb-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
-            <span className={`inline-block p-2 rounded-lg ${msg.role === 'user' ? 'bg-blue-200' : 'bg-gray-200'}`}>
+            <span
+              className={`inline-block p-2 rounded-lg ${
+                msg.role === 'user' ? 'bg-blue-200' : 'bg-gray-200'
+              }`}
+            >
               {msg.content}
             </span>
           </div>
