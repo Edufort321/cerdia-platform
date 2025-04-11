@@ -6,7 +6,7 @@ interface Props {
   mode?: 'investor' | 'admin' | 'formation'
 }
 
-export default function ChatiAinvest({ mode = 'investor' }: Props) {
+export default function ChatCerdiaInvest({ mode = 'investor' }: Props) {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -81,4 +81,3 @@ export default function ChatiAinvest({ mode = 'investor' }: Props) {
     </div>
   )
 }
-Final rename to ChatiAinvest.tsx (correct casing)
