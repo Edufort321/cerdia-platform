@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabaseClient'
+import { supabase } from '../../lib/supabaseClient'
 
 export default function TestSupabasePage() {
   const [status, setStatus] = useState('⏳ Connexion à Supabase en cours...')
@@ -10,8 +10,9 @@ export default function TestSupabasePage() {
   useEffect(() => {
     const testConnection = async () => {
       const { data, error } = await supabase
-        .from('test_table') // Remplace par ta vraie table si nécessaire
+        .from('ia_memory') // table réelle
         .select('*')
+        .order('created_at', { ascending: false })
         .limit(5)
 
       if (error) {
