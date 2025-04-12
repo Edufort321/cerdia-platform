@@ -21,7 +21,7 @@ export default function Navbar() {
           </span>
         </div>
 
-        {/* Menu */}
+        {/* Liens de navigation */}
         <nav className="flex items-center gap-10">
           <Link href="/" className="text-[#0F1E47] font-medium hover:underline">Accueil</Link>
           <Link href="#vision" className="text-[#0F1E47] font-medium hover:underline">Vision</Link>
