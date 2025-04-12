@@ -44,8 +44,10 @@ export default function Home() {
           <p className="text-sm text-gray-600">Investissements locatifs en croissance dans des marchés porteurs à l’échelle internationale.</p>
         </div>
         <div className="bg-white p-6 rounded shadow text-center">
-          <h3 className="text-xl font-semibold text-blue-700 mb-2">Croissance à long terme</h3>
-          <p className="text-sm text-gray-600">Structure visionnaire avec objectif 1 milliard en actifs d’ici 20 ans, pilotée par des fondateurs engagés.</p>
+          <h3 className="text-xl font-semibold text-blue-700 mb-2">Vision à long terme</h3>
+          <p className="text-sm text-gray-600">
+            Structure visionnaire orientée vers une croissance durable à long terme, portée par des fondateurs engagés.
+          </p>
         </div>
       </section>
 
