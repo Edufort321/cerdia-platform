@@ -22,19 +22,49 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* SECTION BANNIÈRE – IMAGE NON COUPÉE */}
-      <section id="vision" className="w-full bg-white">
-        <div className="w-full overflow-hidden">
-          <div className="relative w-full" style={{ aspectRatio: '3 / 4' }}>
-            <Image
-              src="/cerdia-4piliers-banner.jpg"
-              alt="Les 4 piliers stratégiques de CERDIA"
-              fill
-              className="object-contain"
-              priority
-            />
-          </div>
-        </div>
+      {/* SLIDE 1 – INTELLIGENCE ARTIFICIELLE */}
+      <section className="w-full">
+        <Image
+          src="/cerdia-slide-intelligence.jpg"
+          alt="Intelligence artificielle CERDIA"
+          width={1920}
+          height={800}
+          className="w-full h-auto"
+          priority
+        />
+      </section>
+
+      {/* SLIDE 2 – IMMOBILIER D’EXCEPTION */}
+      <section className="w-full">
+        <Image
+          src="/cerdia-slide-immobilier.jpg"
+          alt="Immobilier d'exception CERDIA"
+          width={1920}
+          height={800}
+          className="w-full h-auto"
+        />
+      </section>
+
+      {/* SLIDE 3 – FORMATION STRATÉGIQUE */}
+      <section className="w-full">
+        <Image
+          src="/cerdia-slide-formation.jpg"
+          alt="Formation stratégique CERDIA"
+          width={1920}
+          height={800}
+          className="w-full h-auto"
+        />
+      </section>
+
+      {/* SLIDE 4 – LOCATION HAUT DE GAMME */}
+      <section className="w-full">
+        <Image
+          src="/cerdia-slide-location.jpg"
+          alt="Location haut de gamme CERDIA"
+          width={1920}
+          height={800}
+          className="w-full h-auto"
+        />
       </section>
 
       {/* FOOTER */}
