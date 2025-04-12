@@ -1,40 +1,10 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* HEADER NAVIGATION */}
-      <header className="flex items-center justify-between px-8 py-5 bg-white shadow-md">
-        {/* Logo CERDIA à gauche */}
-        <div className="flex items-center gap-4">
-          <Image
-            src="/logo-cerdia.png"
-            alt="Logo CERDIA"
-            width={60}
-            height={60}
-            className="object-contain"
-          />
-          <span className="text-xl font-semibold text-[#0F1E47] hidden md:inline">
-            Investissement CERDIA
-          </span>
-        </div>
-
-        {/* Menu à droite avec espace de 2 cm (~8rem = 32px = Tailwind gap-8) */}
-        <nav className="flex items-center gap-8">
-          <Link href="/" className="text-[#0F1E47] hover:underline font-medium">Accueil</Link>
-          <Link href="#vision" className="text-[#0F1E47] hover:underline font-medium">Vision</Link>
-          <Link href="/connexion" className="text-[#0F1E47] hover:underline font-medium">Connexion</Link>
-          <Link href="/investir">
-            <button className="bg-[#0F1E47] text-white px-5 py-2 rounded-full hover:bg-[#1a2960] transition">
-              Investir
-            </button>
-          </Link>
-        </nav>
-      </header>
-
       {/* SECTION PRINCIPALE */}
       <section className="max-w-6xl mx-auto px-6 py-16 text-center">
         <h1 className="text-4xl md:text-6xl font-bold text-[#0F1E47] font-serif mb-6">
