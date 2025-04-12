@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -5,24 +7,35 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* HEADER NAVIGATION */}
-      <header className="flex items-center justify-between px-8 py-5 shadow-sm bg-white">
+      <header className="flex items-center justify-between px-8 py-4 bg-white shadow-md">
         {/* Logo CERDIA à gauche */}
         <div className="flex items-center gap-4">
           <Image
             src="/logo-cerdia.png"
             alt="Logo CERDIA"
-            width={80}
-            height={80}
+            width={60}
+            height={60}
             className="object-contain"
           />
+          <span className="text-xl font-semibold text-[#0F1E47] hidden md:inline">Investissement CERDIA</span>
         </div>
 
         {/* Liens à droite */}
-        <nav className="flex gap-4">
-          <Link href="/" className="px-4 py-2 bg-[#0F1E47] text-white rounded-md hover:bg-[#1a2960] transition">Accueil</Link>
-          <Link href="#vision" className="px-4 py-2 bg-[#0F1E47] text-white rounded-md hover:bg-[#1a2960] transition">Vision</Link>
-          <Link href="/connexion" className="px-4 py-2 bg-[#0F1E47] text-white rounded-md hover:bg-[#1a2960] transition">Connexion</Link>
-          <Link href="/investir" className="px-4 py-2 bg-[#0F1E47] text-white rounded-md hover:bg-[#1a2960] transition">Investir</Link>
+        <nav className="flex items-center gap-4">
+          <Link href="/">
+            <span className="text-[#0F1E47] hover:underline font-medium">Accueil</span>
+          </Link>
+          <Link href="#vision">
+            <span className="text-[#0F1E47] hover:underline font-medium">Vision</span>
+          </Link>
+          <Link href="/connexion">
+            <span className="text-[#0F1E47] hover:underline font-medium">Connexion</span>
+          </Link>
+          <Link href="/investir">
+            <button className="bg-[#0F1E47] text-white px-4 py-2 rounded-full hover:bg-[#1a2960] transition">
+              Investir
+            </button>
+          </Link>
         </nav>
       </header>
 
@@ -35,13 +48,15 @@ export default function Home() {
           L'intelligence au service de l'investissement. Rejoignez un réseau haut de gamme 
           et faites croître votre capital stratégiquement.
         </p>
-        <Link href="/investir" className="btn-primary">
-          🚀 Devenir investisseur
+        <Link href="/investir">
+          <button className="bg-[#0F1E47] text-white px-6 py-3 rounded-full text-lg hover:bg-[#1a2960] transition">
+            🚀 Devenir investisseur
+          </button>
         </Link>
       </section>
 
       {/* MODULES */}
-      <section className="max-w-5xl mx-auto px-6 py-12 space-y-12">
+      <section className="max-w-5xl mx-auto px-6 py-12 space-y-12" id="vision">
         <div>
           <h2 className="text-2xl font-serif text-[#0F1E47] mb-2">
             🌟 Intelligence artificielle
@@ -81,3 +96,4 @@ export default function Home() {
     </div>
   )
 }
+
