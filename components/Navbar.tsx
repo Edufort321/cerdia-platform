@@ -5,24 +5,21 @@ import Image from 'next/image'
 
 export default function Navbar() {
   return (
-    <header className="w-full bg-white shadow-md">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-        {/* Logo et nom */}
-        <div className="flex items-center gap-3">
+    <header className="bg-white shadow-md w-full">
+      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+        {/* Logo seul, plus gros */}
+        <div className="flex-shrink-0">
           <Image
             src="/logo-cerdia.png"
             alt="Logo CERDIA"
-            width={50}
-            height={50}
+            width={150}
+            height={150}
             className="object-contain"
           />
-          <span className="text-xl font-semibold text-[#0F1E47]">
-            Investissement CERDIA
-          </span>
         </div>
 
-        {/* Liens de navigation */}
-        <nav className="flex items-center gap-8">
+        {/* Menu à droite */}
+        <nav className="flex items-center gap-10">
           <Link href="/" className="text-[#0F1E47] hover:underline font-medium">Accueil</Link>
           <Link href="#vision" className="text-[#0F1E47] hover:underline font-medium">Vision</Link>
           <Link href="/connexion" className="text-[#0F1E47] hover:underline font-medium">Connexion</Link>
