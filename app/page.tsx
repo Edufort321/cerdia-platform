@@ -17,23 +17,23 @@ export default function Home() {
         </p>
         <Link href="/investir">
           <button className="bg-[#0F1E47] text-white px-6 py-3 rounded-full text-lg hover:bg-[#1a2960] transition">
-            🚀 Devenir investisseur
+            Devenir investisseur
           </button>
         </Link>
       </section>
 
       {/* SECTION BANNIÈRE – IMAGE NON COUPÉE */}
-      <section id="vision" className="w-full">
-        <div className="max-w-6xl mx-auto px-4">
-          <Image
-            src="/cerdia-4piliers-banner.jpg"
-            alt="Les 4 piliers stratégiques de CERDIA"
-            layout="responsive"
-            width={1000}
-            height={1600} // hauteur ajustée à l’image réelle
-            className="object-contain rounded-lg"
-            priority
-          />
+      <section id="vision" className="w-full bg-white">
+        <div className="w-full overflow-hidden">
+          <div className="relative w-full" style={{ aspectRatio: '3 / 4' }}>
+            <Image
+              src="/cerdia-4piliers-banner.jpg"
+              alt="Les 4 piliers stratégiques de CERDIA"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
         </div>
       </section>
 
