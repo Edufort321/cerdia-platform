@@ -17,7 +17,7 @@ export default function Home() {
         </p>
         <Link href="/investir">
           <button className="bg-[#0F1E47] text-white px-6 py-3 rounded-full text-lg hover:bg-[#1a2960] transition">
-            🚀 Devenir investisseur
+             Devenir investisseur
           </button>
         </Link>
       </section>
