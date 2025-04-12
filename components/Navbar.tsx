@@ -2,35 +2,35 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import logo from '../public/logo-cerdia.png'
 
 export default function Navbar() {
   return (
-    <header className="w-full bg-white border-b border-gray-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo à gauche */}
-        <Link href="/">
-          <Image src={logo} alt="Logo CERDIA" width={60} height={60} priority />
-        </Link>
-
-        {/* Menu stylisé à droite */}
-        <nav className="flex gap-6">
-          {[
-            { href: '/', label: 'Accueil' },
-            { href: '/vision', label: 'Vision' },
-            { href: '/connexion', label: 'Connexion' },
-            { href: '/investir', label: 'Investir' },
-          ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="bg-[#0a1a2f] text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-[#132c4a] transition-all"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+    <header className="flex items-center justify-between px-8 py-5 bg-white shadow-md">
+      {/* Logo CERDIA à gauche */}
+      <div className="flex items-center gap-4">
+        <Image
+          src="/logo-cerdia.png"
+          alt="Logo CERDIA"
+          width={60}
+          height={60}
+          className="object-contain"
+        />
+        <span className="text-xl font-semibold text-[#0F1E47] hidden md:inline">
+          Investissement CERDIA
+        </span>
       </div>
+
+      {/* Liens à droite avec espace de 2cm (~gap-8 = 2rem) */}
+      <nav className="flex items-center gap-8">
+        <Link href="/" className="text-[#0F1E47] hover:underline font-medium">Accueil</Link>
+        <Link href="#vision" className="text-[#0F1E47] hover:underline font-medium">Vision</Link>
+        <Link href="/connexion" className="text-[#0F1E47] hover:underline font-medium">Connexion</Link>
+        <Link href="/investir">
+          <button className="bg-[#0F1E47] text-white px-5 py-2 rounded-full hover:bg-[#1a2960] transition">
+            Investir
+          </button>
+        </Link>
+      </nav>
     </header>
   )
 }
