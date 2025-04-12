@@ -12,8 +12,8 @@ export default function Navbar() {
           <Image
             src="/logo-cerdia.png"
             alt="Logo CERDIA"
-            width={100}
-            height={100}
+            width={200}
+            height={200}
             className="object-contain"
           />
         </div>
