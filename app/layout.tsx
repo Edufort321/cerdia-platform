@@ -10,8 +10,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr">
       <body className="bg-gray-50 text-gray-800">
+        {/* Barre de navigation */}
         <Navbar />
-        <main className="p-6 max-w-5xl mx-auto">{children}</main>
+
+        {/* Contenu principal */}
+        <main className="p-6 max-w-7xl mx-auto">
+          {children}
+        </main>
       </body>
     </html>
   )
