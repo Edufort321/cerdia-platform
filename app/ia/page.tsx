@@ -1,60 +1,40 @@
-'use client'
-
-import { useState } from 'react'
-
-export default function IAPage() {
-  const [url, setUrl] = useState('')
-  const [response, setResponse] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-
-  const handleScan = async () => {
-    setLoading(true)
-    setResponse(null)
-
-    try {
-      const res = await fetch('/api/ia-scan-web', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url }),
-      })
-
-      const data = await res.json()
-      setResponse(data.result || 'Aucune réponse')
-    } catch (e) {
-      setResponse("Erreur d'analyse.")
-    }
-
-    setLoading(false)
-  }
-
+export default function PublicIACerdia() {
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold text-center text-[#0F1E47] mb-6">🧠 Assistant IA CERDIA</h1>
+    <div className="max-w-3xl mx-auto py-12 px-4 text-center">
+      <h1 className="text-2xl font-bold text-blue-900 mb-6">
+        🧠 Assistant IA CERDIA
+      </h1>
 
-      <div className="mb-4">
+      {/* Zone de chat simplifiée */}
+      <div className="bg-white shadow p-4 rounded mb-6">
         <input
           type="text"
-          placeholder="Entrez une URL à scanner"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
+          placeholder="Posez votre question sur CERDIA..."
           className="w-full border border-gray-300 p-2 rounded"
         />
+        <button className="mt-3 bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800">
+          Envoyer
+        </button>
       </div>
 
-      <button
-        onClick={handleScan}
-        disabled={loading || !url}
-        className="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition"
-      >
-        {loading ? 'Analyse en cours...' : 'Scanner l’URL'}
-      </button>
-
-      {response && (
-        <div className="mt-6 p-4 bg-gray-100 rounded text-gray-800">
-          <h2 className="font-semibold mb-2">📄 Résultat :</h2>
-          <p>{response}</p>
-        </div>
-      )}
+      {/* Vision romancée */}
+      <div className="bg-gray-50 border-t pt-6 px-2 text-left text-gray-700">
+        <h2 className="text-lg font-semibold text-blue-900 mb-2">
+          Une vision d’avenir avec l’IA CERDIA
+        </h2>
+        <p className="mb-2">
+          Imaginez un monde où chaque décision d’investissement est guidée par une intelligence stratégique. CERDIA IA vous 
+          accompagne dans l’analyse de projets immobiliers, la détection d’opportunités de marché, et la gestion proactive de votre capital.
+        </p>
+        <p className="mb-2">
+          Que vous soyez investisseur novice ou stratège aguerri, notre IA adaptative vous offre des recommandations personnalisées, 
+          répond à vos questions sur les projets en cours, et surveille en temps réel les tendances du marché mondial.
+        </p>
+        <p>
+          L’IA CERDIA, c’est plus qu’un outil : c’est un partenaire de croissance, un cerveau digital à votre service, opérant jour et nuit pour faire 
+          fructifier votre patrimoine avec vision et sécurité.
+        </p>
+      </div>
     </div>
   )
 }
