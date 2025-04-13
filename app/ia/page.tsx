@@ -10,6 +10,7 @@ interface Message {
 export default function IAPage() {
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
+  const [loading, setLoading] = useState(false)
 
   const handleSend = async () => {
     const trimmed = input.trim()
@@ -17,12 +18,29 @@ export default function IAPage() {
 
     setMessages((prev) => [...prev, { type: 'user', text: trimmed }])
     setInput('')
+    setLoading(true)
 
-    // Simuler réponse IA
-    setTimeout(() => {
-      const responseText = `Merci pour votre message! L’IA CERDIA vous répondra bientôt avec une analyse.`
-      setMessages((prev) => [...prev, { type: 'ia', text: responseText }])
-    }, 1000)
+    try {
+      const res = await fetch('/api/ia-public', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: trimmed }),
+      })
+
+      const data = await res.json()
+
+      setMessages((prev) => [
+        ...prev,
+        { type: 'ia', text: data.result || 'Réponse indisponible.' },
+      ])
+    } catch (e) {
+      setMessages((prev) => [
+        ...prev,
+        { type: 'ia', text: '❌ Erreur de communication avec l’IA.' },
+      ])
+    }
+
+    setLoading(false)
   }
 
   return (
@@ -42,6 +60,9 @@ export default function IAPage() {
             {msg.text}
           </div>
         ))}
+        {loading && (
+          <div className="p-2 text-sm text-gray-500">⏳ Réflexion de l’IA en cours...</div>
+        )}
       </div>
 
       <div className="flex gap-2 mb-8">
