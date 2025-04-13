@@ -45,11 +45,11 @@ export default function Home() {
         />
       </section>
 
-      {/* SLIDE 3 – FORMATION STRATÉGIQUE */}
+      {/* SLIDE 3 – ECOMMERCE CERDIA */}
       <section className="w-full">
         <Image
-          src="/cerdia-slide-formation.png"
-          alt="Formation stratégique CERDIA"
+          src="/cerdia-slide-ecommerce.png"
+          alt="eCommerce CERDIA – Produits et accessoires de voyage optimisés par IA"
           width={1920}
           height={800}
           className="w-full h-auto"
@@ -61,6 +61,17 @@ export default function Home() {
         <Image
           src="/cerdia-slide-location.png"
           alt="Location haut de gamme CERDIA"
+          width={1920}
+          height={800}
+          className="w-full h-auto"
+        />
+      </section>
+
+      {/* SLIDE 5 – FORMATION STRATÉGIQUE */}
+      <section className="w-full">
+        <Image
+          src="/cerdia-slide-formation.png"
+          alt="Formation stratégique CERDIA"
           width={1920}
           height={800}
           className="w-full h-auto"
