@@ -1,22 +1,31 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase' // ← Assure-toi que ce chemin est correct
 
 export default function ConnexionPage() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleLogin = () => {
-    console.log('Login', email, password)
-    // Ici tu connecteras Supabase Auth plus tard
+  const handleLogin = async () => {
+    setError('')
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+
+    if (error) {
+      setError('Identifiants invalides. Veuillez réessayer.')
+    } else {
+      router.push('/dashboard') // ← Redirige vers le tableau de bord
+    }
   }
 
   return (
     <div className="max-w-md mx-auto mt-20 p-6 border shadow rounded">
       <h2 className="text-xl font-bold mb-4">Connexion Investisseurs</h2>
 
-      {/* Email */}
       <input
         type="email"
         placeholder="Adresse courriel"
@@ -25,7 +34,6 @@ export default function ConnexionPage() {
         className="w-full p-2 mb-4 border rounded"
       />
 
-      {/* Mot de passe + icône œil */}
       <div className="relative mb-4">
         <input
           type={showPassword ? 'text' : 'password'}
@@ -53,7 +61,8 @@ export default function ConnexionPage() {
         </button>
       </div>
 
-      {/* Bouton Connexion */}
+      {error && <p className="text-red-600 mb-2">{error}</p>}
+
       <button
         onClick={handleLogin}
         className="w-full bg-blue-700 hover:bg-blue-800 text-white py-2 rounded"
@@ -61,7 +70,6 @@ export default function ConnexionPage() {
         Connexion
       </button>
 
-      {/* Lien mot de passe oublié */}
       <div className="text-center mt-4">
         <a href="/reset-password" className="text-blue-600 hover:underline">
           Mot de passe oublié ?
