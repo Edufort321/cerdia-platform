@@ -1,5 +1,5 @@
-/api/ia-scan-web/route.ts
-➡ contenu minimal :
+// app/api/ia-scan-web/route.ts
+
 export function GET() {
-  return new Response("IA API active");
+  return new Response("✅ Route IA Scan Web active")
 }
