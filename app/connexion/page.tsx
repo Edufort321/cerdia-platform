@@ -7,6 +7,7 @@ export default function ConnexionPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
 
   const handleLogin = async () => {
@@ -17,7 +18,7 @@ export default function ConnexionPage() {
     if (error) {
       setError(error.message)
     } else {
-      router.push('/dashboard') // redirection après succès
+      router.push('/dashboard') // Redirection après succès
     }
   }
 
@@ -25,18 +26,31 @@ export default function ConnexionPage() {
     <div className="p-4 max-w-md mx-auto">
       <h1 className="text-xl font-bold mb-4">Connexion Investisseurs</h1>
 
+      {/* Email */}
       <input
         type="email"
         placeholder="Courriel"
         className="border p-2 w-full mb-2"
         onChange={(e) => setEmail(e.target.value)}
       />
-      <input
-        type="password"
-        placeholder="Mot de passe"
-        className="border p-2 w-full mb-2"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+
+      {/* Mot de passe avec icône œil */}
+      <div className="relative mb-2">
+        <input
+          type={showPassword ? 'text' : 'password'}
+          placeholder="Mot de passe"
+          className="border p-2 w-full pr-10"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button
+          type="button"
+          className="absolute top-2 right-2 text-gray-600"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? '🙈' : '👁️'}
+        </button>
+      </div>
+
       <button
         onClick={handleLogin}
         className="bg-blue-700 text-white px-4 py-2 w-full"
