@@ -25,7 +25,7 @@ export default function Home() {
       {/* SLIDE 1 – INTELLIGENCE ARTIFICIELLE */}
       <section className="w-full">
         <Image
-          src="/cerdia-slide-intelligence.jpg"
+          src="/cerdia-slide-intelligence.png"
           alt="Intelligence artificielle CERDIA"
           width={1920}
           height={800}
@@ -37,7 +37,7 @@ export default function Home() {
       {/* SLIDE 2 – IMMOBILIER D’EXCEPTION */}
       <section className="w-full">
         <Image
-          src="/cerdia-slide-immobilier.jpg"
+          src="/cerdia-slide-immobilier.png"
           alt="Immobilier d'exception CERDIA"
           width={1920}
           height={800}
@@ -48,7 +48,7 @@ export default function Home() {
       {/* SLIDE 3 – FORMATION STRATÉGIQUE */}
       <section className="w-full">
         <Image
-          src="/cerdia-slide-formation.jpg"
+          src="/cerdia-slide-formation.png"
           alt="Formation stratégique CERDIA"
           width={1920}
           height={800}
@@ -59,7 +59,7 @@ export default function Home() {
       {/* SLIDE 4 – LOCATION HAUT DE GAMME */}
       <section className="w-full">
         <Image
-          src="/cerdia-slide-location.jpg"
+          src="/cerdia-slide-location.png"
           alt="Location haut de gamme CERDIA"
           width={1920}
           height={800}
