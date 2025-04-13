@@ -1,33 +1,56 @@
 'use client'
-
 import { useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
+import { useRouter } from 'next/navigation'
 
 export default function ConnexionPage() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
   const handleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOtp({ email })
-    setMessage(error ? 'Erreur : ' + error.message : 'Lien de connexion envoyé 📩')
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+    if (error) {
+      setError(error.message)
+    } else {
+      router.push('/dashboard') // redirection après succès
+    }
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-center px-4">
-      <h1 className="text-3xl font-bold mb-4">Connexion</h1>
+    <div className="p-4 max-w-md mx-auto">
+      <h1 className="text-xl font-bold mb-4">Connexion Investisseurs</h1>
+
       <input
         type="email"
-        placeholder="votre email"
-        className="border px-4 py-2 mb-4 w-full max-w-sm"
+        placeholder="Courriel"
+        className="border p-2 w-full mb-2"
         onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Mot de passe"
+        className="border p-2 w-full mb-2"
+        onChange={(e) => setPassword(e.target.value)}
       />
       <button
         onClick={handleLogin}
-        className="bg-[#0F1E47] text-white px-6 py-2 rounded hover:bg-[#1a2960]"
+        className="bg-blue-700 text-white px-4 py-2 w-full"
       >
-        Envoyer le lien magique
+        Connexion
       </button>
-      {message && <p className="mt-4 text-sm text-gray-600">{message}</p>}
+
+      <p className="text-sm mt-4 text-center">
+        <a href="/reset" className="text-blue-500 hover:underline">
+          Mot de passe oublié ?
+        </a>
+      </p>
+
+      {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>
   )
 }
