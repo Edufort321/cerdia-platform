@@ -22,60 +22,70 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* SLIDE 1 – INTELLIGENCE ARTIFICIELLE */}
-      <section className="w-full">
-        <Image
-          src="/cerdia-slide-intelligence.png"
-          alt="Intelligence artificielle CERDIA"
-          width={1920}
-          height={800}
-          className="w-full h-auto"
-          priority
-        />
+      {/* SLIDE 1 – IA */}
+      <section className="w-full cursor-pointer">
+        <Link href="/ia">
+          <Image
+            src="/cerdia-slide-intelligence.png"
+            alt="Intelligence artificielle CERDIA"
+            width={1920}
+            height={800}
+            className="w-full h-auto transition-transform duration-200 hover:scale-105"
+            priority
+          />
+        </Link>
       </section>
 
-      {/* SLIDE 2 – IMMOBILIER D’EXCEPTION */}
-      <section className="w-full">
-        <Image
-          src="/cerdia-slide-immobilier.png"
-          alt="Immobilier d'exception CERDIA"
-          width={1920}
-          height={800}
-          className="w-full h-auto"
-        />
+      {/* SLIDE 2 – IMMOBILIER */}
+      <section className="w-full cursor-pointer">
+        <Link href="/immobilier">
+          <Image
+            src="/cerdia-slide-immobilier.png"
+            alt="Immobilier d'exception CERDIA"
+            width={1920}
+            height={800}
+            className="w-full h-auto transition-transform duration-200 hover:scale-105"
+          />
+        </Link>
       </section>
 
-      {/* SLIDE 3 – ECOMMERCE CERDIA */}
-      <section className="w-full">
-        <Image
-          src="/cerdia-slide-ecommerce.png"
-          alt="eCommerce CERDIA – Produits et accessoires de voyage optimisés par IA"
-          width={1920}
-          height={800}
-          className="w-full h-auto"
-        />
+      {/* SLIDE 3 – ECOMMERCE */}
+      <section className="w-full cursor-pointer">
+        <Link href="/ecommerce">
+          <Image
+            src="/cerdia-slide-ecommerce.png"
+            alt="eCommerce CERDIA"
+            width={1920}
+            height={800}
+            className="w-full h-auto transition-transform duration-200 hover:scale-105"
+          />
+        </Link>
       </section>
 
-      {/* SLIDE 4 – LOCATION HAUT DE GAMME */}
-      <section className="w-full">
-        <Image
-          src="/cerdia-slide-location.png"
-          alt="Location haut de gamme CERDIA"
-          width={1920}
-          height={800}
-          className="w-full h-auto"
-        />
+      {/* SLIDE 4 – LOCATION */}
+      <section className="w-full cursor-pointer">
+        <Link href="/location">
+          <Image
+            src="/cerdia-slide-location.png"
+            alt="Location haut de gamme CERDIA"
+            width={1920}
+            height={800}
+            className="w-full h-auto transition-transform duration-200 hover:scale-105"
+          />
+        </Link>
       </section>
 
-      {/* SLIDE 5 – FORMATION STRATÉGIQUE */}
-      <section className="w-full">
-        <Image
-          src="/cerdia-slide-formation.png"
-          alt="Formation stratégique CERDIA"
-          width={1920}
-          height={800}
-          className="w-full h-auto"
-        />
+      {/* SLIDE 5 – FORMATION */}
+      <section className="w-full cursor-pointer">
+        <Link href="/formation">
+          <Image
+            src="/cerdia-slide-formation.png"
+            alt="Formation stratégique CERDIA"
+            width={1920}
+            height={800}
+            className="w-full h-auto transition-transform duration-200 hover:scale-105"
+          />
+        </Link>
       </section>
 
       {/* FOOTER */}
