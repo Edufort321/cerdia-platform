@@ -1,9 +1,14 @@
 import { supabase } from '@/lib/supabaseClient'
 
+type MemoryMessage = {
+  role: 'user' | 'ia'
+  content: string
+}
+
 type MemoryEntry = {
   user_id: string
   role: string
-  context: string
+  messages: MemoryMessage[]
   created_at?: string
 }
 
@@ -13,7 +18,7 @@ export async function saveMemory(entry: MemoryEntry) {
     .insert([entry])
 
   if (error) {
-    console.error('Erreur lors de l’enregistrement mémoire IA:', error)
+    console.error('❌ Erreur mémoire IA (save):', error)
   }
 
   return data
@@ -28,7 +33,7 @@ export async function getLastMemories(user_id: string, limit = 10) {
     .limit(limit)
 
   if (error) {
-    console.error('Erreur lors de la récupération de la mémoire IA:', error)
+    console.error('❌ Erreur mémoire IA (get):', error)
   }
 
   return data
