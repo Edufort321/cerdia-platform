@@ -1,7 +1,7 @@
 // app/api/ia-admin/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
-import { createMiddlewareSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { saveMemory } from '@/lib/ia/memory'
 
@@ -13,8 +13,9 @@ export async function POST(req: NextRequest) {
   const { prompt } = await req.json()
 
   try {
-    // 1. Authentifie l'utilisateur via Supabase middleware
-    const supabase = createMiddlewareSupabaseClient({ req, res: NextResponse.next(), cookies })
+    // 1. Authentifier l’utilisateur via Supabase
+    const supabase = createServerComponentSupabaseClient({ cookies })
+
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Profil introuvable' }, { status: 403 })
     }
 
-    // 2. Appel OpenAI
+    // 2. Appel à OpenAI (IA stratégique admin)
     const completion = await openai.chat.completions.create({
       model: 'gpt-4',
       temperature: 0.5,
@@ -42,10 +43,10 @@ export async function POST(req: NextRequest) {
           role: 'system',
           content: `
 Tu es l’IA officielle de la direction Investissement CERDIA. Ton rôle est stratégique : 
-Tu peux aider à créer des composants, à générer du code TypeScript ou React,
+Tu peux aider à créer des composants, générer du code TypeScript ou React,
 proposer des solutions pour optimiser le site CERDIA, les produits eCommerce ou le dashboard IA.
 
-Réponds toujours dans un ton professionnel et structuré. Pose des questions si nécessaire avant d’agir.
+Réponds toujours dans un ton professionnel, clair, structuré. Pose des questions si nécessaire avant d’agir.
         `.trim(),
         },
         {
@@ -57,7 +58,7 @@ Réponds toujours dans un ton professionnel et structuré. Pose des questions si
 
     const result = completion.choices[0].message?.content ?? 'Réponse indisponible'
 
-    // 3. Sauvegarde mémoire dans Supabase
+    // 3. Enregistrement mémoire IA (Supabase)
     await saveMemory(user.id, profile.role, [
       { role: 'user', content: prompt },
       { role: 'ia', content: result },
