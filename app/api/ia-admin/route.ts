@@ -1,7 +1,7 @@
 // app/api/ia-admin/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
-import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { saveMemory } from '@/lib/ia/memory'
 
@@ -13,8 +13,8 @@ export async function POST(req: NextRequest) {
   const { prompt } = await req.json()
 
   try {
-    // 1. Authentifier l’utilisateur via Supabase
-    const supabase = createServerComponentSupabaseClient({ cookies })
+    // 1. Authentifie l’utilisateur via Supabase
+    const supabase = createServerComponentClient({ cookies })
 
     const {
       data: { user },
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Profil introuvable' }, { status: 403 })
     }
 
-    // 2. Appel à OpenAI (IA stratégique admin)
+    // 2. Appel OpenAI avec rôle IA stratégique admin
     const completion = await openai.chat.completions.create({
       model: 'gpt-4',
       temperature: 0.5,
@@ -58,7 +58,7 @@ Réponds toujours dans un ton professionnel, clair, structuré. Pose des questio
 
     const result = completion.choices[0].message?.content ?? 'Réponse indisponible'
 
-    // 3. Enregistrement mémoire IA (Supabase)
+    // 3. Sauvegarde mémoire IA (historique stratégique)
     await saveMemory(user.id, profile.role, [
       { role: 'user', content: prompt },
       { role: 'ia', content: result },
@@ -67,9 +67,6 @@ Réponds toujours dans un ton professionnel, clair, structuré. Pose des questio
     return NextResponse.json({ result })
   } catch (err) {
     console.error('Erreur IA Admin:', err)
-    return NextResponse.json(
-      { error: 'Erreur IA admin' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Erreur IA admin' }, { status: 500 })
   }
 }
