@@ -1,19 +1,19 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { useEffect, useState } from 'react'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { useSession } from '@supabase/auth-helpers-react'
+import { Database } from '@/types/supabase'
 
 interface Message {
   type: 'user' | 'ia'
   text: string
 }
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
-
 export default function AdminIACerdiaPage() {
+  const supabase = createClientComponentClient<Database>()
+  const session = useSession()
+
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(false)
@@ -23,7 +23,7 @@ export default function AdminIACerdiaPage() {
 
   const handleSend = async () => {
     const trimmed = input.trim()
-    if (!trimmed) return
+    if (!trimmed || !session) return
 
     setMessages((prev) => [...prev, { type: 'user', text: trimmed }])
     setInput('')
@@ -32,7 +32,10 @@ export default function AdminIACerdiaPage() {
     try {
       const res = await fetch('/api/ia-admin', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ prompt: trimmed }),
       })
 
@@ -43,6 +46,7 @@ export default function AdminIACerdiaPage() {
         { type: 'ia', text: data.result || 'Réponse indisponible.' },
       ])
     } catch (e) {
+      console.error('Erreur IA Admin:', e)
       setMessages((prev) => [
         ...prev,
         { type: 'ia', text: '❌ Erreur de communication avec IA Admin.' },
@@ -63,7 +67,7 @@ export default function AdminIACerdiaPage() {
     }
 
     fetchHistory()
-  }, [])
+  }, [supabase])
 
   const markAsStrategic = async (id: string) => {
     const { error } = await supabase
@@ -80,7 +84,9 @@ export default function AdminIACerdiaPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-10">
-      <h1 className="text-3xl font-bold text-center mb-6">🧠 IA CERDIA – Mode Administrateur</h1>
+      <h1 className="text-3xl font-bold text-center mb-6">
+        🧠 IA CERDIA – Mode Administrateur
+      </h1>
 
       {/* Boîte de dialogue IA */}
       <div className="bg-gray-100 p-4 rounded-md shadow-inner h-[400px] overflow-y-auto mb-6">
@@ -88,7 +94,9 @@ export default function AdminIACerdiaPage() {
           <div
             key={i}
             className={`p-3 rounded mb-2 max-w-[85%] ${
-              msg.type === 'user' ? 'bg-blue-200 ml-auto text-right' : 'bg-white text-left border'
+              msg.type === 'user'
+                ? 'bg-blue-200 ml-auto text-right'
+                : 'bg-white text-left border'
             }`}
           >
             {msg.text}
@@ -97,7 +105,7 @@ export default function AdminIACerdiaPage() {
         {loading && <p className="text-sm text-gray-500">⏳ Réponse IA en cours...</p>}
       </div>
 
-      {/* Saisie IA */}
+      {/* Zone de saisie */}
       <div className="flex gap-2 mb-10">
         <input
           type="text"
