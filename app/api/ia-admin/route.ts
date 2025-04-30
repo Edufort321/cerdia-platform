@@ -1,7 +1,6 @@
-// app/api/ia-admin/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { saveMemory } from '@/lib/ia/memory'
 
@@ -13,12 +12,14 @@ export async function POST(req: NextRequest) {
   const { prompt } = await req.json()
 
   try {
-    // 1. Authentifie l’utilisateur via Supabase
-    const supabase = createServerComponentClient({ cookies })
+    // Authentifie l’utilisateur via Supabase
+    const supabase = createRouteHandlerClient({ cookies })
 
     const {
-      data: { user },
-    } = await supabase.auth.getUser()
+      data: { session },
+    } = await supabase.auth.getSession()
+
+    const user = session?.user
 
     if (!user) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
@@ -34,7 +35,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Profil introuvable' }, { status: 403 })
     }
 
-    // 2. Appel OpenAI avec rôle IA stratégique admin
     const completion = await openai.chat.completions.create({
       model: 'gpt-4',
       temperature: 0.5,
@@ -58,7 +58,6 @@ Réponds toujours dans un ton professionnel, clair, structuré. Pose des questio
 
     const result = completion.choices[0].message?.content ?? 'Réponse indisponible'
 
-    // 3. Sauvegarde mémoire IA (historique stratégique)
     await saveMemory(user.id, profile.role, [
       { role: 'user', content: prompt },
       { role: 'ia', content: result },
