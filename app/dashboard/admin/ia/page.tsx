@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useSession } from '@supabase/auth-helpers-react'
+import { useSession } from '@supabase/auth-helpers-nextjs'
 import { Database } from '@/types/supabase'
 
 interface Message {
