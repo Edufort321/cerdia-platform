@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useSession } from '@supabase/auth-helpers-nextjs'
 import { Database } from '@/types/supabase'
 
 interface Message {
@@ -12,7 +11,7 @@ interface Message {
 
 export default function AdminIACerdiaPage() {
   const supabase = createClientComponentClient<Database>()
-  const session = useSession()
+  const [session, setSession] = useState<any>(null)
 
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
@@ -20,6 +19,17 @@ export default function AdminIACerdiaPage() {
 
   const [history, setHistory] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
+
+  useEffect(() => {
+    const getSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+      setSession(session)
+    }
+
+    getSession()
+  }, [supabase])
 
   const handleSend = async () => {
     const trimmed = input.trim()
