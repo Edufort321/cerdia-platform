@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabaseClient'
+import { SupabaseClient } from '@supabase/supabase-js'
 
 type MemoryMessage = {
   role: 'user' | 'ia'
@@ -13,6 +13,7 @@ type MemoryEntry = {
 }
 
 export async function saveMemory(
+  supabase: SupabaseClient,
   user_id: string,
   role: string,
   messages: MemoryMessage[]
@@ -30,7 +31,11 @@ export async function saveMemory(
   }
 }
 
-export async function getLastMemories(user_id: string, limit = 10) {
+export async function getLastMemories(
+  supabase: SupabaseClient,
+  user_id: string,
+  limit = 10
+) {
   const { data, error } = await supabase
     .from('ia_memory')
     .select('*')
@@ -44,4 +49,3 @@ export async function getLastMemories(user_id: string, limit = 10) {
 
   return data
 }
-
