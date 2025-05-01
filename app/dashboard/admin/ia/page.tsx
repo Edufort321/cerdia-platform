@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { useSession } from '@supabase/auth-helpers-react'
 import { Database } from '@/types/supabase'
 
 interface Message {
@@ -11,7 +12,7 @@ interface Message {
 
 export default function AdminIACerdiaPage() {
   const supabase = createClientComponentClient<Database>()
-  const [session, setSession] = useState<any>(null)
+  const session = useSession()
 
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
@@ -19,17 +20,6 @@ export default function AdminIACerdiaPage() {
 
   const [history, setHistory] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
-
-  useEffect(() => {
-    const getSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      setSession(session)
-    }
-
-    getSession()
-  }, [supabase])
 
   const handleSend = async () => {
     const trimmed = input.trim()
@@ -51,15 +41,26 @@ export default function AdminIACerdiaPage() {
 
       const data = await res.json()
 
+      if (!res.ok) {
+        const message = data?.error || 'Erreur inconnue'
+        throw new Error(message)
+      }
+
       setMessages((prev) => [
         ...prev,
         { type: 'ia', text: data.result || 'Réponse indisponible.' },
       ])
-    } catch (e) {
+    } catch (e: any) {
       console.error('Erreur IA Admin:', e)
+
       setMessages((prev) => [
         ...prev,
-        { type: 'ia', text: '❌ Erreur de communication avec IA Admin.' },
+        {
+          type: 'ia',
+          text:
+            '❌ Erreur de communication avec IA Admin.\n' +
+            (e.message || 'Erreur inconnue'),
+        },
       ])
     }
 
@@ -98,7 +99,6 @@ export default function AdminIACerdiaPage() {
         🧠 IA CERDIA – Mode Administrateur
       </h1>
 
-      {/* Boîte de dialogue IA */}
       <div className="bg-gray-100 p-4 rounded-md shadow-inner h-[400px] overflow-y-auto mb-6">
         {messages.map((msg, i) => (
           <div
@@ -115,13 +115,12 @@ export default function AdminIACerdiaPage() {
         {loading && <p className="text-sm text-gray-500">⏳ Réponse IA en cours...</p>}
       </div>
 
-      {/* Zone de saisie */}
       <div className="flex gap-2 mb-10">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Commande IA stratégique, ex. : ajoute une section dans /page.tsx..."
+          placeholder="Commande IA stratégique, exemple : ajoute une section dans /page.tsx..."
           className="flex-1 border p-2 rounded shadow"
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
         />
@@ -133,7 +132,6 @@ export default function AdminIACerdiaPage() {
         </button>
       </div>
 
-      {/* Historique IA */}
       <div>
         <h2 className="text-xl font-semibold mb-3">📜 Historique des requêtes IA</h2>
 
@@ -149,7 +147,7 @@ export default function AdminIACerdiaPage() {
           {history
             .filter(
               (h) =>
-                h.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                h.question?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 h.answer?.toLowerCase().includes(searchTerm.toLowerCase())
             )
             .map((h, idx) => (
