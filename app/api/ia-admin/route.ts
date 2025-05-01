@@ -12,31 +12,34 @@ export async function POST(req: NextRequest) {
   const { prompt } = await req.json()
 
   try {
-    // Authentifier l'utilisateur via Supabase (session)
+    console.log('📡 Requête IA reçue')
     const supabase = createRouteHandlerClient({ cookies })
 
     const {
       data: { session },
+      error: sessionError,
     } = await supabase.auth.getSession()
 
-    const user = session?.user
+    if (sessionError) console.error('❌ Erreur session Supabase:', sessionError)
 
+    const user = session?.user
     if (!user) {
+      console.warn('⛔ Utilisateur non authentifié')
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
     }
 
-    // Récupération du profil avec le rôle
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single()
 
+    if (profileError) console.error('❌ Erreur profil Supabase:', profileError)
+
     if (!profile) {
       return NextResponse.json({ error: 'Profil introuvable' }, { status: 403 })
     }
 
-    // Appel OpenAI (GPT-4)
     const completion = await openai.chat.completions.create({
       model: 'gpt-4',
       temperature: 0.5,
@@ -50,7 +53,7 @@ pour le site, le eCommerce, les dashboards ou la vision d’affaires.
 
 Réponds toujours de manière professionnelle, claire et concise.
 Pose une question si nécessaire avant d’agir.
-        `.trim(),
+          `.trim(),
         },
         {
           role: 'user',
@@ -61,15 +64,14 @@ Pose une question si nécessaire avant d’agir.
 
     const result = completion.choices[0].message?.content ?? 'Réponse indisponible'
 
-    // Sauvegarde dans la mémoire IA (historique stratégique)
-    await saveMemory(supabase, user.id, profile.role, [
+    await saveMemory(user.id, profile.role, [
       { role: 'user', content: prompt },
       { role: 'ia', content: result },
     ])
 
     return NextResponse.json({ result })
   } catch (err) {
-    console.error('Erreur IA Admin:', err)
+    console.error('🔥 Erreur IA Admin:', err)
     return NextResponse.json({ error: 'Erreur IA admin' }, { status: 500 })
   }
 }
