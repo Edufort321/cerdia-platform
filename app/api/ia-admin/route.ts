@@ -64,7 +64,8 @@ Pose une question si nécessaire avant d’agir.
 
     const result = completion.choices[0].message?.content ?? 'Réponse indisponible'
 
-    await saveMemory(user.id, profile.role, [
+    // ✅ Correction ici : ajout de supabase en premier argument
+    await saveMemory(supabase, user.id, profile.role, [
       { role: 'user', content: prompt },
       { role: 'ia', content: result },
     ])
