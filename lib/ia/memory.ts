@@ -10,6 +10,7 @@ type MemoryEntry = {
   role: string
   messages: MemoryMessage[]
   created_at?: string
+  is_strategic?: boolean
 }
 
 export async function saveMemory(
@@ -17,7 +18,7 @@ export async function saveMemory(
   user_id: string,
   role: string,
   messages: MemoryMessage[]
-) {
+): Promise<boolean> {
   const { error } = await supabase.from('ia_memory').insert([
     {
       user_id,
@@ -27,15 +28,18 @@ export async function saveMemory(
   ])
 
   if (error) {
-    console.error('❌ Erreur enregistrement mémoire IA:', error)
+    console.error('❌ Erreur enregistrement mémoire IA:', error.message)
+    return false
   }
+
+  return true
 }
 
 export async function getLastMemories(
   supabase: SupabaseClient,
   user_id: string,
   limit = 10
-) {
+): Promise<MemoryEntry[] | null> {
   const { data, error } = await supabase
     .from('ia_memory')
     .select('*')
@@ -44,7 +48,8 @@ export async function getLastMemories(
     .limit(limit)
 
   if (error) {
-    console.error('❌ Erreur récupération mémoire IA:', error)
+    console.error('❌ Erreur récupération mémoire IA:', error.message)
+    return null
   }
 
   return data
