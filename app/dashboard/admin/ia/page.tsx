@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useSession } from '@supabase/auth-helpers-react'
 import { Database } from '@/types/supabase'
 
 interface Message {
@@ -12,7 +11,6 @@ interface Message {
 
 export default function AdminIACerdiaPage() {
   const supabase = createClientComponentClient<Database>()
-  const session = useSession()
 
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
@@ -31,30 +29,25 @@ export default function AdminIACerdiaPage() {
     try {
       const res = await fetch('/api/ia-admin', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: trimmed }),
       })
 
       const data = await res.json()
 
-      if (!res.ok) {
-        throw new Error(data?.error || 'Erreur inconnue du serveur IA Admin.')
+      if (data.result) {
+        setMessages((prev) => [...prev, { type: 'ia', text: data.result }])
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { type: 'ia', text: '❌ Réponse non disponible.' },
+        ])
       }
-
+    } catch (e) {
+      console.error('Erreur IA Admin:', e)
       setMessages((prev) => [
         ...prev,
-        { type: 'ia', text: data.result || 'Réponse indisponible.' },
-      ])
-    } catch (e: any) {
-      console.error('❌ Erreur IA Admin:', e)
-      setMessages((prev) => [
-        ...prev,
-        {
-          type: 'ia',
-          text: `❌ Erreur de communication avec IA Admin.\nDétail : ${e.message || 'Erreur inconnue.'}`,
-        },
+        { type: 'ia', text: '❌ Erreur de communication avec IA Admin.' },
       ])
     }
 
@@ -82,9 +75,7 @@ export default function AdminIACerdiaPage() {
 
     if (!error) {
       setHistory((prev) =>
-        prev.map((item) =>
-          item.id === id ? { ...item, is_strategic: true } : item
-        )
+        prev.map((item) => (item.id === id ? { ...item, is_strategic: true } : item))
       )
     }
   }
@@ -95,12 +86,11 @@ export default function AdminIACerdiaPage() {
         🧠 IA CERDIA – Mode Administrateur
       </h1>
 
-      {/* Dialogue IA */}
       <div className="bg-gray-100 p-4 rounded-md shadow-inner h-[400px] overflow-y-auto mb-6">
         {messages.map((msg, i) => (
           <div
             key={i}
-            className={`p-3 rounded mb-2 max-w-[85%] whitespace-pre-wrap ${
+            className={`p-3 rounded mb-2 max-w-[85%] ${
               msg.type === 'user'
                 ? 'bg-blue-200 ml-auto text-right'
                 : 'bg-white text-left border'
@@ -112,7 +102,6 @@ export default function AdminIACerdiaPage() {
         {loading && <p className="text-sm text-gray-500">⏳ Réponse IA en cours...</p>}
       </div>
 
-      {/* Input commande */}
       <div className="flex gap-2 mb-10">
         <input
           type="text"
@@ -130,7 +119,6 @@ export default function AdminIACerdiaPage() {
         </button>
       </div>
 
-      {/* Historique IA */}
       <div>
         <h2 className="text-xl font-semibold mb-3">📜 Historique des requêtes IA</h2>
 
@@ -146,7 +134,7 @@ export default function AdminIACerdiaPage() {
           {history
             .filter(
               (h) =>
-                h.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                h.question?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 h.answer?.toLowerCase().includes(searchTerm.toLowerCase())
             )
             .map((h, idx) => (
@@ -159,9 +147,7 @@ export default function AdminIACerdiaPage() {
                 </p>
 
                 {h.is_strategic ? (
-                  <span className="text-xs text-red-600 font-semibold">
-                    🔥 Stratégique
-                  </span>
+                  <span className="text-xs text-red-600 font-semibold">🔥 Stratégique</span>
                 ) : (
                   <button
                     onClick={() => markAsStrategic(h.id)}
