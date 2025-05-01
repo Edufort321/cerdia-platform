@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useSession } from '@supabase/auth-helpers-react'
 import { Database } from '@/types/supabase'
 
 interface Message {
@@ -12,18 +11,15 @@ interface Message {
 
 export default function AdminIACerdiaPage() {
   const supabase = createClientComponentClient<Database>()
-  const session = useSession()
-
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(false)
-
   const [history, setHistory] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState('')
 
   const handleSend = async () => {
     const trimmed = input.trim()
-    if (!trimmed || !session) return
+    if (!trimmed) return
 
     setMessages((prev) => [...prev, { type: 'user', text: trimmed }])
     setInput('')
@@ -32,18 +28,14 @@ export default function AdminIACerdiaPage() {
     try {
       const res = await fetch('/api/ia-admin', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.access_token}`,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: trimmed }),
       })
 
       const data = await res.json()
 
       if (!res.ok) {
-        const message = data?.error || 'Erreur inconnue'
-        throw new Error(message)
+        throw new Error(data?.error || 'Erreur inconnue')
       }
 
       setMessages((prev) => [
@@ -52,7 +44,6 @@ export default function AdminIACerdiaPage() {
       ])
     } catch (e: any) {
       console.error('Erreur IA Admin:', e)
-
       setMessages((prev) => [
         ...prev,
         {
@@ -69,7 +60,10 @@ export default function AdminIACerdiaPage() {
 
   useEffect(() => {
     const fetchHistory = async () => {
-      const { data, error } = await supabase
+      const {
+        data,
+        error,
+      } = await supabase
         .from('ia_memory')
         .select('*')
         .order('created_at', { ascending: false })
