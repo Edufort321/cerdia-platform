@@ -12,19 +12,23 @@ export async function POST(req: NextRequest) {
   const { prompt } = await req.json()
 
   try {
-    // Authentifie l'utilisateur via Supabase (session côté API)
+    // 1. Authentification via Supabase (Route Handler)
     const supabase = createRouteHandlerClient({ cookies })
-
     const {
       data: { session },
+      error: sessionError,
     } = await supabase.auth.getSession()
 
-    const user = session?.user
-    if (!user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (sessionError || !session) {
+      return NextResponse.json(
+        { error: 'Utilisateur non authentifié. Veuillez vous connecter.' },
+        { status: 401 }
+      )
     }
 
-    // Va chercher le rôle à partir de la table "profiles"
+    const user = session.user
+
+    // 2. Vérifie que le profil est lié à un rôle
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('role')
@@ -32,10 +36,13 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (profileError || !profile) {
-      return NextResponse.json({ error: 'Profil introuvable' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Aucun profil ou rôle trouvé pour cet utilisateur.' },
+        { status: 403 }
+      )
     }
 
-    // Appel à OpenAI
+    // 3. Appel à OpenAI
     const completion = await openai.chat.completions.create({
       model: 'gpt-4',
       temperature: 0.5,
@@ -43,12 +50,9 @@ export async function POST(req: NextRequest) {
         {
           role: 'system',
           content: `
-Tu es l’IA officielle de la direction Investissement CERDIA. Ton rôle est stratégique. 
-Tu aides à générer des idées, du code, des composants React, des propositions d’amélioration
-pour le site, le eCommerce, les dashboards ou la vision d’affaires.
-
-Réponds toujours de manière professionnelle, claire et concise.
-Pose une question si nécessaire avant d’agir.
+Tu es l’IA stratégique de direction pour Investissement CERDIA.
+Tu aides à générer des idées de développement, optimiser des composants techniques (React, TypeScript), créer des sections web et améliorer la vision d’affaires.
+Sois professionnel, clair et structuré.
           `.trim(),
         },
         {
@@ -58,9 +62,9 @@ Pose une question si nécessaire avant d’agir.
       ],
     })
 
-    const result = completion.choices[0].message?.content ?? 'Réponse indisponible'
+    const result = completion.choices[0].message?.content ?? 'Réponse indisponible.'
 
-    // Sauvegarde dans ia_memory
+    // 4. Sauvegarde mémoire IA
     await saveMemory(supabase, user.id, profile.role, [
       { role: 'user', content: prompt },
       { role: 'ia', content: result },
@@ -68,13 +72,10 @@ Pose une question si nécessaire avant d’agir.
 
     return NextResponse.json({ result })
   } catch (err: any) {
-    console.error('Erreur IA Admin complète:', err)
+    console.error('❌ Erreur IA Admin:', err)
 
     return NextResponse.json(
-      {
-        error: 'Erreur IA admin',
-        details: err?.message || JSON.stringify(err),
-      },
+      { error: 'Erreur IA admin : ' + (err.message || 'Erreur inconnue') },
       { status: 500 }
     )
   }
